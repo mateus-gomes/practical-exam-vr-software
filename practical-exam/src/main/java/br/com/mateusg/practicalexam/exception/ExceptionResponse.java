@@ -1,20 +1,19 @@
 package br.com.mateusg.practicalexam.exception;
 
-import java.time.LocalDate;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class ExceptionResponse {
-    private LocalDate timestamp;
+    private LocalDateTime timestamp;
     private String message;
     private String details;
 
-    public ExceptionResponse(LocalDate timestamp, String message, String details) {
+    public ExceptionResponse(LocalDateTime timestamp, String message, String details) {
         this.timestamp = timestamp;
         this.message = message;
         this.details = details;
     }
 
-    public LocalDate getTimestamp() {
+    public LocalDateTime getTimestamp() {
         return timestamp;
     }
 

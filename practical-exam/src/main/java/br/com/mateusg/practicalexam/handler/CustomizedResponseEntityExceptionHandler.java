@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @RestController
 @ControllerAdvice
@@ -18,7 +18,7 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleGenericExceptions(Exception exception, WebRequest request){
         ExceptionResponse exceptionResponse = new ExceptionResponse(
-                LocalDate.now(),
+                LocalDateTime.now(),
                 exception.getMessage(),
                 request.getDescription(false)
         );
