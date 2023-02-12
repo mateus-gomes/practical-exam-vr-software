@@ -17,7 +17,6 @@ public class Client {
     @Column(name = "client_name", nullable = false, length = 80)
     private String clientName;
 
-    @NotNull
     @Positive(message = "Client limit should be a positive number")
     @NotNull(message = "Client limit is a required field and should not be empty")
     @Column(name = "client_limit", nullable = false)
