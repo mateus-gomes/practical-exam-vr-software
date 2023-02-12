@@ -16,14 +16,9 @@ public class ClientService {
 
 
     public void create(Client client) {
-        clientRepository.save(executeClientRules(client));
-    }
-
-    private Client executeClientRules(Client client){
         verifyIfNumberIsADayOfTheMonth(client.getInvoiceDueDate());
-        client.setClientLimit(convertToTwoDecimalPlaces(client.getClientLimit()));
 
-        return client;
+        clientRepository.save(client);
     }
 
     private void verifyIfNumberIsADayOfTheMonth(int number){

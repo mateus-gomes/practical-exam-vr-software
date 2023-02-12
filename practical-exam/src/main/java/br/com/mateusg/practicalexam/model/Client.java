@@ -51,7 +51,11 @@ public class Client {
     }
 
     public void setClientLimit(Double clientLimit) {
-        this.clientLimit = clientLimit;
+        this.clientLimit = convertToTwoDecimalPlaces(clientLimit);
+    }
+
+    private Double convertToTwoDecimalPlaces(Double number){
+        return Math.round(number * 100.0) / 100.0;
     }
 
     public Byte getInvoiceDueDate() {
