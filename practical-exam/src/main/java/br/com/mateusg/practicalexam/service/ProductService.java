@@ -24,8 +24,4 @@ public class ProductService {
     public void create(Product product) {
         productRepository.save(product);
     }
-
-    private Double convertToTwoDecimalPlaces(Double number){
-        return Math.round(number * 100.0) / 100.0;
-    }
 }
