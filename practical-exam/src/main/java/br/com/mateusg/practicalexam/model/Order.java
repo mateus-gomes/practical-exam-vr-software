@@ -12,12 +12,38 @@ import java.time.LocalDate;
 public class Order {
 
     @Id
-    @Column(name = "order_id", nullable = false, length = 30)
-    private Long orderId;
+    private Long idOrder;
 
     @Column(name = "order_date", nullable = false)
     private LocalDate orderDate;
 
     @Column(name = "order_status", nullable = false)
     private String status;
+
+    public Order() {
+    }
+
+    public Long getIdOrder() {
+        return idOrder;
+    }
+
+    public void setIdOrder(Long idOrder) {
+        this.idOrder = idOrder;
+    }
+
+    public LocalDate getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(LocalDate orderDate) {
+        this.orderDate = orderDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }
