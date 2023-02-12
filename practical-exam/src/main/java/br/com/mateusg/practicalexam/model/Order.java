@@ -1,9 +1,6 @@
 package br.com.mateusg.practicalexam.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
@@ -21,6 +18,7 @@ public class Order {
     private String status;
 
     public Order() {
+        this.orderDate = LocalDate.now();
     }
 
     public Long getIdOrder() {
@@ -33,10 +31,6 @@ public class Order {
 
     public LocalDate getOrderDate() {
         return orderDate;
-    }
-
-    public void setOrderDate(LocalDate orderDate) {
-        this.orderDate = orderDate;
     }
 
     public String getStatus() {

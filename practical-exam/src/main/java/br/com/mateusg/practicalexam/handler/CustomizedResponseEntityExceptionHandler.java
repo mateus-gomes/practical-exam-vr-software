@@ -2,6 +2,7 @@ package br.com.mateusg.practicalexam.handler;
 
 import br.com.mateusg.practicalexam.exception.ExceptionResponse;
 import br.com.mateusg.practicalexam.exception.NotADayOfTheMonthException;
+import br.com.mateusg.practicalexam.exception.NotAValidStatusException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -23,7 +24,7 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
         return new ResponseEntity<ExceptionResponse>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(NotADayOfTheMonthException.class)
+    @ExceptionHandler({NotADayOfTheMonthException.class, NotAValidStatusException.class})
     public ResponseEntity<ExceptionResponse> handleNotADayOfTheMonthExceptions(Exception exception, WebRequest request){
         ExceptionResponse exceptionResponse = buildExceptionResponse(exception, request);
 
