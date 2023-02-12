@@ -1,6 +1,9 @@
 package br.com.mateusg.practicalexam.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import org.springframework.data.annotation.PersistenceConstructor;
 
 @Entity
@@ -9,12 +12,19 @@ public class Client {
     @Id
     private Long idClient;
 
+    @Size(min = 1, max = 80, message = "Client name must have between 1 and 80 characters")
+    @NotNull(message = "Client name is a required field and should not be empty")
     @Column(name = "client_name", nullable = false, length = 80)
     private String clientName;
 
+    @NotNull
+    @Positive(message = "Client limit should be a positive number")
+    @NotNull(message = "Client limit is a required field and should not be empty")
     @Column(name = "client_limit", nullable = false)
     private Double clientLimit;
 
+    @Positive(message = "Invoice due date should be a positive number")
+    @NotNull(message = "Invoice due date is a required field and should not be empty")
     @Column(name = "invoice_due_date", nullable = false)
     private Byte invoiceDueDate;
 
