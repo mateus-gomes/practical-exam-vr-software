@@ -1,8 +1,6 @@
 package br.com.mateusg.practicalexam.handler;
 
-import br.com.mateusg.practicalexam.exception.ExceptionResponse;
-import br.com.mateusg.practicalexam.exception.NotADayOfTheMonthException;
-import br.com.mateusg.practicalexam.exception.NotAValidStatusException;
+import br.com.mateusg.practicalexam.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -29,6 +27,20 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
         ExceptionResponse exceptionResponse = buildExceptionResponse(exception, request);
 
         return new ResponseEntity<ExceptionResponse>(exceptionResponse, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    @ExceptionHandler(InvalidGivenIdException.class)
+    public ResponseEntity<ExceptionResponse> handleInvalidGivenIdExceptions(Exception exception, WebRequest request){
+        ExceptionResponse exceptionResponse = buildExceptionResponse(exception, request);
+
+        return new ResponseEntity<ExceptionResponse>(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ProductAlreadyInOrderException.class)
+    public ResponseEntity<ExceptionResponse> handleProductAlreadyInOrderExceptions(Exception exception, WebRequest request){
+        ExceptionResponse exceptionResponse = buildExceptionResponse(exception, request);
+
+        return new ResponseEntity<ExceptionResponse>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
     private ExceptionResponse buildExceptionResponse(Exception exception, WebRequest request){

@@ -1,6 +1,9 @@
 package br.com.mateusg.practicalexam.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 @Entity
 @Table(name = "order_client_product")
@@ -12,19 +15,24 @@ public class OrderClientProduct {
     private Long orderClientProductId;
 
     @Column(name = "product_amount", nullable = false)
+    @Positive(message = "Product amount should be a positive number")
     private int productAmount;
 
     @ManyToOne
-    @JoinColumn(name = "client_fk")
+    @JoinColumn(name = "fk_client",  nullable = false)
+    @NotNull(message = "An order item should have a client associated")
     private Client clients;
 
     @ManyToOne
-    @JoinColumn(name = "product_fk")
-    private Product product;
+    @JoinColumn(name = "fk_product",  nullable = false)
+    @NotNull(message = "An order item should have a product associated")
+    private Product products;
 
+    @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "order_fk")
-    private Order order;
+    @JoinColumn(name = "fk_order",  nullable = false)
+    @NotNull(message = "An order item should have a order associated")
+    private Order orders;
 
     public OrderClientProduct() {
     }
@@ -53,19 +61,19 @@ public class OrderClientProduct {
         this.clients = clients;
     }
 
-    public Product getProduct() {
-        return product;
+    public Product getProducts() {
+        return products;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setProducts(Product products) {
+        this.products = products;
     }
 
-    public Order getOrder() {
-        return order;
+    public Order getOrders() {
+        return orders;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
+    public void setOrders(Order orders) {
+        this.orders = orders;
     }
 }

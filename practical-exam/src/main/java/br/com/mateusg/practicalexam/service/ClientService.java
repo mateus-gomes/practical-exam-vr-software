@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClientService {
@@ -37,5 +38,9 @@ public class ClientService {
 
     public boolean existsById(Long idClient) {
         return clientRepository.existsById(idClient);
+    }
+
+    public Optional<Client> findById(Long idClient) {
+        return clientRepository.findById(idClient);
     }
 }
