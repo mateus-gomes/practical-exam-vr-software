@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
@@ -22,6 +24,17 @@ public class OrderController {
     @GetMapping
     public ResponseEntity findAllOrders(){
         return new ResponseEntity<>(orderService.findAll(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{idOrder}")
+    public ResponseEntity findOrderById(@PathVariable Long idOrder){
+        Optional<Order> order = orderService.findById(idOrder);
+
+        if(order.isPresent()){
+            return new ResponseEntity<>(order, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(order, HttpStatus.NO_CONTENT);
+        }
     }
 
     @PostMapping

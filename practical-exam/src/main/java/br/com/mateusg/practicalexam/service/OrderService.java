@@ -7,8 +7,8 @@ import br.com.mateusg.practicalexam.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderService {
@@ -34,5 +34,9 @@ public class OrderService {
         if(!OrderStatus.isValidStatus(status)){
             throw new NotAValidStatusException(String.format("Order status should be: %s", OrderStatus.listOfValidStatus()));
         }
+    }
+
+    public Optional<Order> findById(Long idOrder) {
+        return orderRepository.findById(idOrder);
     }
 }
