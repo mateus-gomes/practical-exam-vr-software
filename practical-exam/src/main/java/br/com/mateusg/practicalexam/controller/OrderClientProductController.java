@@ -3,6 +3,7 @@ package br.com.mateusg.practicalexam.controller;
 import br.com.mateusg.practicalexam.handler.ErrorHandler;
 import br.com.mateusg.practicalexam.model.OrderClientProduct;
 import br.com.mateusg.practicalexam.service.OrderClientProductService;
+import br.com.mateusg.practicalexam.view.AmountProductOrderIds;
 import br.com.mateusg.practicalexam.view.ProductOrderIds;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,12 @@ public class OrderClientProductController {
     public ResponseEntity deleteOrderItem(@RequestBody ProductOrderIds productOrderIds){
         orderClientProductService.deleteProductInOrder(productOrderIds);
         return ResponseEntity.status(204).build();
+    }
+
+    @PutMapping("/amount")
+    public ResponseEntity editProductAmount(@RequestBody AmountProductOrderIds amountProductOrderIds){
+        orderClientProductService.updateProductAmount(amountProductOrderIds);
+        return ResponseEntity.status(200).build();
     }
 
 

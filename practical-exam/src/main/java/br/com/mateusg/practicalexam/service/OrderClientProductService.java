@@ -7,6 +7,7 @@ import br.com.mateusg.practicalexam.model.Client;
 import br.com.mateusg.practicalexam.model.OrderClientProduct;
 import br.com.mateusg.practicalexam.model.Product;
 import br.com.mateusg.practicalexam.repository.OrderClientProductRepository;
+import br.com.mateusg.practicalexam.view.AmountProductOrderIds;
 import br.com.mateusg.practicalexam.view.ProductOrderIds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderClientProductService {
@@ -169,5 +171,17 @@ public class OrderClientProductService {
                 productOrderIds.getIdOrder(),
                 productOrderIds.getIdProduct()
         );
+    }
+
+    public void updateProductAmount(AmountProductOrderIds amountProductOrderIds) {
+        Optional<OrderClientProduct> orderClientProduct = orderClientProductRepository.findByProductAndOrder(
+                amountProductOrderIds.getIdProduct(),
+                amountProductOrderIds.getIdOrder()
+        );
+
+        if(orderClientProduct.isPresent()){
+            orderClientProduct.get().setProductAmount(amountProductOrderIds.getAmount());
+            orderClientProductRepository.save(orderClientProduct.get());
+        }
     }
 }
