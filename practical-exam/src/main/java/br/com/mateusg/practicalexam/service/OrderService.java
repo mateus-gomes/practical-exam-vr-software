@@ -40,4 +40,14 @@ public class OrderService {
     public Optional<Order> findById(Long idOrder) {
         return orderRepository.findById(idOrder);
     }
+
+    public List<Order> findAllFiltered(
+            String viewType,
+            String orderDate,
+            Long idClient,
+            Long idProduct,
+            OrderStatus orderStatus
+    ) {
+        return orderRepository.findAllFiltered(idClient, idProduct, orderStatus.toString(), orderDate);
+    }
 }
