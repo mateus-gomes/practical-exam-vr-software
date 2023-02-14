@@ -4,10 +4,10 @@ import br.com.mateusg.practicalexam.exception.InvalidGivenIdException;
 import br.com.mateusg.practicalexam.exception.NotEnoughLimitException;
 import br.com.mateusg.practicalexam.exception.ProductAlreadyInOrderException;
 import br.com.mateusg.practicalexam.model.Client;
-import br.com.mateusg.practicalexam.model.Order;
 import br.com.mateusg.practicalexam.model.OrderClientProduct;
 import br.com.mateusg.practicalexam.model.Product;
 import br.com.mateusg.practicalexam.repository.OrderClientProductRepository;
+import br.com.mateusg.practicalexam.view.ProductOrderIds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -162,5 +162,12 @@ public class OrderClientProductService {
         }
 
         return sumValues;
+    }
+
+    public void deleteProductInOrder(ProductOrderIds productOrderIds) {
+        orderClientProductRepository.deleteByOrderAndProduct(
+                productOrderIds.getIdOrder(),
+                productOrderIds.getIdProduct()
+        );
     }
 }

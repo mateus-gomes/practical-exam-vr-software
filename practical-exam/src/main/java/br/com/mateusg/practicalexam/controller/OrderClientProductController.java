@@ -3,6 +3,7 @@ package br.com.mateusg.practicalexam.controller;
 import br.com.mateusg.practicalexam.handler.ErrorHandler;
 import br.com.mateusg.practicalexam.model.OrderClientProduct;
 import br.com.mateusg.practicalexam.service.OrderClientProductService;
+import br.com.mateusg.practicalexam.view.ProductOrderIds;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,13 @@ public class OrderClientProductController {
 
         orderClientProductService.create(orderClientProduct);
         return ResponseEntity.status(201).body(orderClientProduct);
+    }
+
+    //TODO: Qual o motivo de excluir e retornar 500?
+    @DeleteMapping
+    public ResponseEntity deleteOrderItem(@RequestBody ProductOrderIds productOrderIds){
+        orderClientProductService.deleteProductInOrder(productOrderIds);
+        return ResponseEntity.status(204).build();
     }
 
 

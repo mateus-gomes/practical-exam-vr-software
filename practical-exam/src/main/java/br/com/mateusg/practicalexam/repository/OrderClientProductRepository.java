@@ -23,4 +23,7 @@ public interface OrderClientProductRepository extends JpaRepository<OrderClientP
             LocalDate previousInvoiceDueDate,
             LocalDate nextInvoiceDueDate
     );
+
+    @Query(value = "DELETE FROM order_client_product WHERE fk_order = ?1 AND fk_product = ?2", nativeQuery = true)
+    void deleteByOrderAndProduct(Long fkOrder, Long fkProduct);
 }
