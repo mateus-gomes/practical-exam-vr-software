@@ -26,12 +26,12 @@ public class OrderController {
     @GetMapping
     public ResponseEntity findAllOrders(
         @RequestParam(value="viewType", required=true) String viewType,
-        @RequestParam(value="period", required=false) String period,
+        @RequestParam(value="orderDate", required=false) String orderDate,
         @RequestParam(value="client", required=false) Long idClient,
         @RequestParam(value="product", required=false) Long idProduct,
         @RequestParam(value="orderStatus", required=false) OrderStatus orderStatus
     ){
-        return ResponseEntity.status(200).body(orderService.findAllFiltered(viewType, period, idClient, idProduct, orderStatus));
+        return ResponseEntity.status(200).body(orderService.findAllFiltered(viewType, orderDate, idClient, idProduct, orderStatus));
     }
 
     @GetMapping("/{idOrder}")
