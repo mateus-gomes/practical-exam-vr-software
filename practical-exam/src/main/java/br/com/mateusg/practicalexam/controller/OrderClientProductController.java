@@ -39,8 +39,8 @@ public class OrderClientProductController {
             return ResponseEntity.status(422).body(errorHandler.buildErrorMessage(bindingResult));
         }
 
-        //orderClientProductService.create(orderClientProduct);
-        return ResponseEntity.status(201).body();
+        orderClientProductService.create(orderClientProduct);
+        return ResponseEntity.status(201).body(orderClientProduct);
     }
 
 

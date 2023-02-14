@@ -1,15 +1,20 @@
 package br.com.mateusg.practicalexam.service;
 
 import br.com.mateusg.practicalexam.exception.InvalidGivenIdException;
+import br.com.mateusg.practicalexam.exception.NotEnoughLimitException;
 import br.com.mateusg.practicalexam.exception.ProductAlreadyInOrderException;
 import br.com.mateusg.practicalexam.model.Client;
 import br.com.mateusg.practicalexam.model.Order;
 import br.com.mateusg.practicalexam.model.OrderClientProduct;
+import br.com.mateusg.practicalexam.model.Product;
 import br.com.mateusg.practicalexam.repository.OrderClientProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,7 +50,7 @@ public class OrderClientProductService {
 
         doesClientProductAndOrderExists(idClient, idProduct, idOrder);
         executeProductExistsInOrderValidation(idProduct, idOrder);
-        executeIsCreditLimitEnoughValidation(idClient);
+        executeIsCreditLimitEnoughValidation(idClient, idProduct);
     }
 
     private void doesClientProductAndOrderExists(Long idClient, Long idProduct, Long idOrder){
@@ -74,44 +79,91 @@ public class OrderClientProductService {
         return orderClientProductRepository.findByProductAndOrder(idProduct, idOrder).isPresent();
     }
 
-    private void executeIsCreditLimitEnoughValidation(Long idClient){
+    private void executeIsCreditLimitEnoughValidation(Long idClient, Long idProduct){
         Client client = clientService.findById(idClient).get();
+        Product product = productService.findById(idProduct).get();
 
-        findOrdersThisMonthByClient(client.getIdClient(), client.getInvoiceDueDate());
+        List<OrderClientProduct> listOrdersItems = findOrdersThisMonthByClient(
+                client.getIdClient(),
+                client.getInvoiceDueDate()
+        );
+        Double sumOrders = sumOrdersValues(listOrdersItems);
+        Boolean hasEnoughCreditLimit = sumOrders + product.getPrice() < client.getClientLimit();
+
+        Double availableLimit = client.getClientLimit() - sumOrders;
+        if(!hasEnoughCreditLimit){
+            throw new NotEnoughLimitException(String.format(
+                    "Client available limit is %f. The client invoice due date is %d",
+                    availableLimit, client.getInvoiceDueDate()
+            ));
+        }
     }
 
-    private Order findOrdersThisMonthByClient(Long idClient, int invoiceDueDate){
+    private List<OrderClientProduct> findOrdersThisMonthByClient(Long idClient, int invoiceDueDateDay){
         LocalDate today = LocalDate.now();
         LocalDate previousInvoiceDueDate;
         LocalDate nextInvoiceDueDate;
 
-        if(today.getDayOfMonth() < invoiceDueDate){
+        int previousInvoiceDueDateDay = invoiceDueDateDay;
+        int nextInvoiceDueDateDay = invoiceDueDateDay;
+        Month thisMonth = today.getMonth();
+
+        if(today.getDayOfMonth() < invoiceDueDateDay){
+            if(invoiceDueDateDay > thisMonth.minus(1).length(today.isLeapYear())){
+                previousInvoiceDueDateDay = thisMonth.length(today.isLeapYear());
+            }
+
+            if(invoiceDueDateDay > thisMonth.length(today.isLeapYear())){
+                nextInvoiceDueDateDay = thisMonth.length(today.isLeapYear());
+            }
+
             previousInvoiceDueDate = LocalDate.of(
                     today.getYear(),
-                    today.getMonth().minus(1),
-                    invoiceDueDate
+                    thisMonth.minus(1),
+                    previousInvoiceDueDateDay
             );
 
             nextInvoiceDueDate = LocalDate.of(
                     today.getYear(),
-                    today.getMonth(),
-                    invoiceDueDate
+                    thisMonth,
+                    nextInvoiceDueDateDay
             );
         } else {
+            if(invoiceDueDateDay > thisMonth.length(today.isLeapYear())){
+                previousInvoiceDueDateDay = thisMonth.length(today.isLeapYear());
+            }
+
+            if(invoiceDueDateDay > thisMonth.plus(1).length(today.isLeapYear())){
+                nextInvoiceDueDateDay = thisMonth.length(today.isLeapYear());
+            }
+
             previousInvoiceDueDate = LocalDate.of(
                     today.getYear(),
-                    today.getMonth(),
-                    invoiceDueDate
+                    thisMonth,
+                    previousInvoiceDueDateDay
             );
 
             nextInvoiceDueDate = LocalDate.of(
                     today.getYear(),
-                    today.getMonth().plus(1),
-                    invoiceDueDate
+                    thisMonth.plus(1),
+                    nextInvoiceDueDateDay
             );
         }
 
-        //find where client id = idClient and orderDate between invoiceDueDate/month and invoiceDueDate/nextMonth;
-        return findByIdClientAndBetween
+        return orderClientProductRepository.findByIdClientAndBetweenOrderDate(
+                idClient,
+                previousInvoiceDueDate,
+                nextInvoiceDueDate
+        );
+    }
+
+    private Double sumOrdersValues(List<OrderClientProduct> listOrdersItems) {
+        Double sumValues = 0.0;
+
+        for(int i = 0; i < listOrdersItems.size(); i++){
+            sumValues += (listOrdersItems.get(i).getProductAmount() * listOrdersItems.get(i).getProducts().getPrice());
+        }
+
+        return sumValues;
     }
 }

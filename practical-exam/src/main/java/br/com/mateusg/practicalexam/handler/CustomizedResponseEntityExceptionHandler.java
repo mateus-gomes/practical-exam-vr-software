@@ -36,7 +36,7 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
         return new ResponseEntity<ExceptionResponse>(exceptionResponse, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(ProductAlreadyInOrderException.class)
+    @ExceptionHandler({ProductAlreadyInOrderException.class, NotEnoughLimitException.class})
     public ResponseEntity<ExceptionResponse> handleProductAlreadyInOrderExceptions(Exception exception, WebRequest request){
         ExceptionResponse exceptionResponse = buildExceptionResponse(exception, request);
 
